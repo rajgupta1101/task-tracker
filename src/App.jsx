@@ -16,6 +16,7 @@ export default function App() {
   }, []);
 
   const handleDelete = (id) => {
+    if (!window.confirm("Are you sure you want to delete this task?")) return;
     const new_tasks = tasks.filter((task) => task.id != id);
     setTasks(new_tasks);
     storage.set(key, new_tasks);
@@ -52,16 +53,22 @@ export default function App() {
 
       {visible && <AddForm onSubmit={handleAdd} />}
       <div className="task-container">
-        {tasks.map((task) => (
-          <Card
-            key={task.id}
-            title={task.taskName}
-            subTitle={new Date(task.datetime).toLocaleString()}
-            active={task.remindMe}
-            onDelete={() => handleDelete(task.id)}
-            onDoubleClick={() => togggleRemind(task.id)}
-          />
-        ))}
+        {tasks.length ? (
+          tasks.map((task) => (
+            <Card
+              key={task.id}
+              title={task.taskName}
+              subTitle={new Date(task.datetime).toLocaleString()}
+              active={task.remindMe}
+              onDelete={() => handleDelete(task.id)}
+              onDoubleClick={() => togggleRemind(task.id)}
+            />
+          ))
+        ) : (
+          <div>
+            <h1>Sorry! You don't have any task please add one.🙂</h1>
+          </div>
+        )}
       </div>
     </div>
   );
